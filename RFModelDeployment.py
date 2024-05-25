@@ -4,7 +4,11 @@ import numpy as np
 import pandas as pd
 
 # Load the trained model
-rf = joblib.load('random_forest_model.joblib')
+try:
+    rf = joblib.load('random_forest_model.joblib')
+    st.write("Model loaded successfully!")
+except Exception as e:
+    st.error(f"Error loading model: {e}")
 
 # Title of the Streamlit app
 st.title('Random Forest Classifier')
@@ -27,8 +31,8 @@ def user_input_features():
     Cmp4 = st.sidebar.number_input('Campaign 4', min_value=0, max_value=1, value=0)
     Cmp5 = st.sidebar.number_input('Campaign 5', min_value=0, max_value=1, value=0)
     Cmp6 = st.sidebar.number_input('Campaign 6', min_value=0, max_value=1, value=0)
-    Education = st.sidebar.selectbox('Education', ['Basic', '2n Cycle', 'Graduation', 'Master', 'PhD'])
-    Marital_Status = st.sidebar.selectbox('Marital Status', ['Single', 'Together', 'Married', 'Divorced', 'Widow'])
+    Education = st.sidebar.selectbox('Education', ['Graduation', 'PhD', 'Master', 'Others'])
+    Marital_Status = st.sidebar.selectbox('Marital Status', ['Single', 'Married', 'Divorced', 'Together', 'Widow', 'Others'])
     WineSales = st.sidebar.number_input('Wine Sales', min_value=0, max_value=10000, value=100)
     FruitSales = st.sidebar.number_input('Fruit Sales', min_value=0, max_value=10000, value=50)
     MeatSales = st.sidebar.number_input('Meat Sales', min_value=0, max_value=10000, value=100)
@@ -66,16 +70,16 @@ def user_input_features():
         'StorePurchases': StorePurchases,
         'WebPurchases': WebPurchases,
         'WebVisitsMonth': WebVisitsMonth,
-        'Education_Basic': 1 if Education == 'Basic' else 0,
-        'Education_2n Cycle': 1 if Education == '2n Cycle' else 0,
         'Education_Graduation': 1 if Education == 'Graduation' else 0,
-        'Education_Master': 1 if Education == 'Master' else 0,
         'Education_PhD': 1 if Education == 'PhD' else 0,
+        'Education_Master': 1 if Education == 'Master' else 0,
+        'Education_Others': 1 if Education == 'Others' else 0,
         'Marital_Status_Single': 1 if Marital_Status == 'Single' else 0,
         'Marital_Status_Together': 1 if Marital_Status == 'Together' else 0,
         'Marital_Status_Married': 1 if Marital_Status == 'Married' else 0,
         'Marital_Status_Divorced': 1 if Marital_Status == 'Divorced' else 0,
         'Marital_Status_Widow': 1 if Marital_Status == 'Widow' else 0,
+        'Marital_Status_Others': 1 if Marital_Status == 'Others' else 0,
     }
 
     features = pd.DataFrame(data, index=[0])
@@ -89,11 +93,14 @@ st.subheader('User Input Parameters')
 st.write(input_df)
 
 # Prediction
-prediction = rf.predict(input_df)
-prediction_proba = rf.predict_proba(input_df)
+try:
+    prediction = rf.predict(input_df)
+    prediction_proba = rf.predict_proba(input_df)
 
-# Display prediction and prediction probabilities
-st.subheader('Prediction')
-st.write('Class: ', prediction[0])
-st.subheader('Prediction Probability')
-st.write(prediction_proba)
+    # Display prediction and prediction probabilities
+    st.subheader('Prediction')
+    st.write('Class: ', prediction[0])
+    st.subheader('Prediction Probability')
+    st.write(prediction_proba)
+except Exception as e:
+    st.error(f"An error occurred during prediction: {e}")
