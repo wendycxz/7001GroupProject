@@ -2,6 +2,10 @@ import streamlit as st
 import joblib
 import numpy as np
 import pandas as pd
+import sklearn  # Make sure to import sklearn to verify its version
+
+# Display version information for debugging
+st.write(f"Scikit-learn version: {sklearn.__version__}")
 
 # Load the trained model
 try:
