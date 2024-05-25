@@ -1,8 +1,9 @@
-numpy
 pandas
-matplotlib
-plotly
-jupyter
+numpy
+regex
+seaborn
 missingno
+matplotlib
+scipy
 scikit-learn
 joblib
