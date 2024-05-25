@@ -34,7 +34,6 @@ def user_input_features():
     Cmp3 = st.sidebar.number_input('Campaign 3', min_value=0, max_value=1, value=0)
     Cmp4 = st.sidebar.number_input('Campaign 4', min_value=0, max_value=1, value=0)
     Cmp5 = st.sidebar.number_input('Campaign 5', min_value=0, max_value=1, value=0)
-    Cmp6 = st.sidebar.number_input('Campaign 6', min_value=0, max_value=1, value=0)
     Education = st.sidebar.selectbox('Education', ['Graduation', 'PhD', 'Master', 'Others'])
     Marital_Status = st.sidebar.selectbox('Marital Status', ['Single', 'Married', 'Divorced', 'Together', 'Widow', 'Others'])
     WineSales = st.sidebar.number_input('Wine Sales', min_value=0, max_value=10000, value=100)
@@ -62,7 +61,6 @@ def user_input_features():
         'Cmp3': Cmp3,
         'Cmp4': Cmp4,
         'Cmp5': Cmp5,
-        'Cmp6': Cmp6,
         'WineSales': WineSales,
         'FruitSales': FruitSales,
         'MeatSales': MeatSales,
