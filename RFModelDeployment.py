@@ -93,7 +93,7 @@ input_df = user_input_features()
 # Ensure correct feature count
 expected_features = [
     'Age', 'Years_joining_as_customer', 'Recency', 'Income', 'KidHome', 'TeenHome', 'Complaints',
-    'Cmp1', 'Cmp2', 'Cmp3', 'Cmp4', 'Cmp5', 'Cmp6', 'WineSales', 'FruitSales', 'MeatSales', 'FishSales',
+    'Cmp1', 'Cmp2', 'Cmp3', 'Cmp4', 'Cmp5', 'WineSales', 'FruitSales', 'MeatSales', 'FishSales',
     'SweetSales', 'GoldSales', 'CatalogPurchases', 'DealPurchases', 'StorePurchases', 'WebPurchases', 'WebVisitsMonth',
     'Education_Graduation', 'Education_PhD', 'Education_Master', 'Education_Others',
     'Marital_Status_Single', 'Marital_Status_Together', 'Marital_Status_Married', 'Marital_Status_Divorced',
