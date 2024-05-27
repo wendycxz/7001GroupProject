@@ -4,10 +4,17 @@ import pandas as pd
 
 # Load the saved model and scaler
 model = joblib.load('random_forest_model.joblib')
-scaler = joblib.load('scaler.joblib')  # Ensure this is saved during training
+scaler = joblib.load('scaler.joblib')
 
-# Define feature columns
-feature_columns = [
+# Define feature columns used for scaling
+features_to_scale = [
+    'Age', 'Years_joining_as_customer', 'Recency', 'Income', 'KidHome', 'TeenHome', 'Complaints',
+    'WineSales', 'FruitSales', 'MeatSales', 'FishSales', 'SweetSales', 'GoldSales', 'CatalogPurchases',
+    'DealPurchases', 'StorePurchases', 'WebPurchases', 'WebVisitsMonth'
+]
+
+# Define all feature columns (scaled and non-scaled)
+all_feature_columns = [
     'Age', 'Years_joining_as_customer', 'Recency', 'Income', 'KidHome', 'TeenHome', 'Complaints',
     'Cmp1', 'Cmp2', 'Cmp3', 'Cmp4', 'Cmp5', 'WineSales', 'FruitSales', 'MeatSales', 'FishSales',
     'SweetSales', 'GoldSales', 'CatalogPurchases', 'DealPurchases', 'StorePurchases', 'WebPurchases', 'WebVisitsMonth',
@@ -94,21 +101,24 @@ input_df = user_input_features()
 
 if input_df is not None:
     # Ensure the features are in the correct order
-    input_df = input_df[feature_columns]
+    input_df = input_df[all_feature_columns]
     
-    # Check the number of features and scale the input data
-    if input_df.shape[1] == len(feature_columns):
-        input_df_scaled = scaler.transform(input_df)
-        
-        # Make predictions using the scaled input data
-        prediction = model.predict(input_df_scaled)
-        
-        # Display user input and prediction results
-        st.subheader('User Input Parameters')
-        for feature, value in input_df.iloc[0].items():
-            st.write(f"{feature}: {value}")
-        
-        st.subheader('Prediction')
-        st.write('Class: ', prediction[0])
-    else:
-        st.error('The input data does not have the correct number of features.')
+    # Select only the features that were scaled
+    input_df_to_scale = input_df[features_to_scale]
+    
+    # Apply the scaler to the input data
+    input_df_scaled = scaler.transform(input_df_to_scale)
+    
+    # Replace the scaled features in the original DataFrame
+    input_df[features_to_scale] = input_df_scaled
+    
+    # Make predictions using the scaled input data
+    prediction = model.predict(input_df)
+    
+    # Display user input and prediction results
+    st.subheader('User Input Parameters')
+    for feature, value in input_df.iloc[0].items():
+        st.write(f"{feature}: {value}")
+    
+    st.subheader('Prediction')
+    st.write('Class: ', prediction[0])
