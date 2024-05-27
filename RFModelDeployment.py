@@ -1,29 +1,23 @@
 import streamlit as st
 import joblib
-import numpy as np
 import pandas as pd
-import sklearn
 
-# Display version information for debugging
-st.write(f"Scikit-learn version: {sklearn.__version__}")
+# Load the saved model and scaler
+model = joblib.load('random_forest_model.joblib')
+scaler = joblib.load('scaler.joblib')  # Ensure this is saved during training
 
-# Load the trained model
-try:
-    rf = joblib.load('random_forest_model.joblib')
-    st.write("Model loaded successfully!")
-except Exception as e:
-    st.error(f"Error loading model: {e}")
+# Define feature columns
+feature_columns = [
+    'Age', 'Years_joining_as_customer', 'Recency', 'Income', 'KidHome', 'TeenHome', 'Complaints',
+    'Cmp1', 'Cmp2', 'Cmp3', 'Cmp4', 'Cmp5', 'WineSales', 'FruitSales', 'MeatSales', 'FishSales',
+    'SweetSales', 'GoldSales', 'CatalogPurchases', 'DealPurchases', 'StorePurchases', 'WebPurchases', 'WebVisitsMonth',
+    'Education_Graduation', 'Education_PhD', 'Education_Master', 'Education_Others',
+    'Marital_Status_Single', 'Marital_Status_Together', 'Marital_Status_Married', 'Marital_Status_Divorced',
+    'Marital_Status_Widow', 'Marital_Status_Others'
+]
 
-#Load the svaed scaler
-scaler=joblib.load('scaler.joblib')
-
-# Title of the Streamlit app
-st.title('Will this customer sign up for upcoming marketing campaign?')
-
-# Sidebar for user input
+# Streamlit UI for input
 st.sidebar.header('User Input Parameters')
-
-# Function to get user input from sidebar
 def user_input_features():
     with st.form(key='input_form'):
         Age = st.slider('Age', min_value=18, max_value=100, value=30)
@@ -99,35 +93,22 @@ def user_input_features():
 input_df = user_input_features()
 
 if input_df is not None:
-    # Ensure correct feature count
-    expected_features = [
-        'Age', 'Years_joining_as_customer', 'Recency', 'Income', 'KidHome', 'TeenHome', 'Complaints',
-        'Cmp1', 'Cmp2', 'Cmp3', 'Cmp4', 'Cmp5', 'WineSales', 'FruitSales', 'MeatSales', 'FishSales',
-        'SweetSales', 'GoldSales', 'CatalogPurchases', 'DealPurchases', 'StorePurchases', 'WebPurchases', 'WebVisitsMonth',
-        'Education_Graduation', 'Education_PhD', 'Education_Master', 'Education_Others',
-        'Marital_Status_Single', 'Marital_Status_Together', 'Marital_Status_Married', 'Marital_Status_Divorced',
-        'Marital_Status_Widow', 'Marital_Status_Others'
-    ]
-
-    input_df = input_df[expected_features]  # Ensure the order and count of features
-
-    # Apply the scaler
-    input_df_scaled = scaler.transform(input_df)
-
-    # Display user input
-    st.subheader('User Input Parameters')
-    for feature, value in input_df.iloc[0].items():
-        st.write(f"{feature}: {value}")
-
-    # Prediction
-    try:
-        prediction = rf.predict(input_df)
-        prediction_proba = rf.predict_proba(input_df)
-
-        # Display prediction and prediction probabilities
+    # Ensure the features are in the correct order
+    input_df = input_df[feature_columns]
+    
+    # Check the number of features and scale the input data
+    if input_df.shape[1] == len(feature_columns):
+        input_df_scaled = scaler.transform(input_df)
+        
+        # Make predictions using the scaled input data
+        prediction = model.predict(input_df_scaled)
+        
+        # Display user input and prediction results
+        st.subheader('User Input Parameters')
+        for feature, value in input_df.iloc[0].items():
+            st.write(f"{feature}: {value}")
+        
         st.subheader('Prediction')
         st.write('Class: ', prediction[0])
-        st.subheader('Prediction Probability')
-        st.write(prediction_proba)
-    except Exception as e:
-        st.error(f"An error occurred during prediction: {e}")
+    else:
+        st.error('The input data does not have the correct number of features.')
