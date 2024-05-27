@@ -14,6 +14,9 @@ try:
 except Exception as e:
     st.error(f"Error loading model: {e}")
 
+#Load the svaed scaler
+scaler=joblib.load('scaler.joblib')
+
 # Title of the Streamlit app
 st.title('Will this customer sign up for upcoming marketing campaign?')
 
@@ -109,7 +112,7 @@ if input_df is not None:
     input_df = input_df[expected_features]  # Ensure the order and count of features
 
     # Apply the scaler
-    input_df_scaled = rf.transform(input_df)
+    input_df_scaled = scaler.transform(input_df)
 
     # Display user input
     st.subheader('User Input Parameters')
