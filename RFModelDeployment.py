@@ -114,6 +114,7 @@ if input_df is not None:
     
     # Make predictions using the scaled input data
     prediction = model.predict(input_df)
+    prediction_proba = model.predict_proba(input_df)
     
     # Display user input and prediction results
     st.subheader('User Input Parameters')
@@ -122,3 +123,5 @@ if input_df is not None:
     
     st.subheader('Prediction')
     st.write('Class: ', prediction[0])
+    st.subheader('Prediction Probability')
+    st.write(prediction_proba)
